@@ -1,0 +1,12 @@
+!!!
+%html
+  %head
+    %title= @title
+  %body
+    %h1= @title
+    #alerts-container
+      %h3 Alerts:
+      %ul
+      - @alerts.each do |alert|
+        %li
+          [#{alert.guid.to_s.gsub!('T-Alert ID ', '')}] #{alert.title}
