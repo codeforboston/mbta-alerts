@@ -28,7 +28,7 @@ MBTA Alerts uses:
 + [Redis][red] as a database
 + [Resque][res] and [resque-scheduler][sch] as background job coordinators
 
-[sin]: www.sinatrarb.com
+[sin]: http://www.sinatrarb.com
 [red]: http://redis.io/
 [res]: https://github.com/defunkt/resque
 [sch]: https://github.com/bvandenbos/resque-scheduler
@@ -58,6 +58,13 @@ $ cd redis-2.6.13
 $ make
 ```
 
+We use [Foreman](https://github.com/ddollar/foreman) to run the webserver and Redis at the same time, using the processes defined in `Procfile`. Run `foreman start` and use `^C` to end.
+
+Then point your browser to [http://localhost:9393][93] and you should see a list of recent MBTA alerts, preceded by four-digit GUIDs.
+
+[93]: http://localhost:9393
+
+If that localhost port doesn't work, look in the terminal for a statement like `server.1 | >> Listening on 127.0.0.1:9393` -- those last 4 digits are the port number to use.
 
 ### Notes
 
