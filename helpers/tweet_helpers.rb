@@ -1,17 +1,21 @@
-# tweetify
 # Make MBTA alerts tweetable
 
 module TweetHelpers
 
+  bitly = Bitly.new 'mbtaalerts', ENV['BITLY_TOKEN']
+
   def tweetify(alert)
-    tweet = alert.dup
+    tweet = alert['message'].dup
     tweet = hash_transit_line(tweet)
     tweet = shorten_locales(tweet)
     tweet = decap_tweet(tweet)
+
+    shortlink = bitly.shorten alert['link'].dup if alert['link']
+    tweet << " #{shortlink}" unless tweet.length + shortlink.length > 140
+
     puts "#{tweet.length} vs #{alert.length} (#{(tweet.length/alert.length.to_f})"
     return tweet
   end
-
 
   def hash_transit_line(tweet)
     colors = %w(Red Green Orange Blue Silver)
@@ -23,8 +27,10 @@ module TweetHelpers
     return my_tweet
   end
 
+
   def shorten_locales(tweet)
-    locale_designations = { square:  "Sq",
+    locale_designations = { 
+                square:  "Sq",
                 center:  "Ctr",
                 street:  "St",
                 place:   "Pl",

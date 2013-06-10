@@ -1,43 +1,51 @@
 #!/usr/bin/env ruby
 
 require 'sinatra'
-require 'omniauth-twitter'
-require 'twitter'
 require 'redis'
+
+require 'twitter'
+require 'omniauth-twitter'
+require 'bitly'
+
 require 'haml'
 require 'json'
 
 require 'rss'
 
 
-class Alert
-  attr_reader :id, :message, :tweeted, :link
-
-  def initialize(*args)
-    args.each do |arg|
-      arg.each_pair do |k,v|
-        instance_variable_set("@#{k}", v) unless v.nil?
-      end
-    end
-  end
-
-  def save
-    save_string = "'#{self.class.to_s.downcase}:#{id}'"
-    self.instance_variables.each do |var|
-      next if var == :@id  # Skip if it's the ID
-      save_string << ", '#{var.to_s.delete "@" }'"
-      save_string << ", \"#{self.instance_variable_get(var)}\""
-    end
-    puts "Still to-do: get this to save to redis"
-    puts "redis.hmset(#{save_string})"
-  end
-end
-
-a = Alert.new(id: 12, message: "This is the tweet about Government Center's Green Line delay.", tweeted: false, link: "http://bitly.com/sjF9F0A")
-a.save
-
 
 class App < Sinatra::Application
+
+  class Alert  # Figure out how to extend Redis ORM methods
+    attr_reader :id, :message, :link
+
+    def initialize(*args)
+      args.each do |arg|
+        arg.each_pair do |k,v|
+          instance_variable_set("@#{k}", v) unless v.nil?
+        end
+      end
+    end
+
+    def save
+      save_string = "'#{self.class.to_s.downcase}:#{id}'"
+      self.instance_variables.each do |var|
+        next if var == :@id  # Skip if it's the ID
+        save_string << ", '#{var.to_s.delete "@" }'"
+        save_string << ", \"#{self.instance_variable_get(var)}\""
+      end
+
+      # Save hash object, untweeted list item atomically
+      puts "Still TODO: get this to save to redis"
+      redis.multi do
+        puts "redis.hmset #{save_string}"
+        puts "redis.rpush untweeted id"
+      end
+    end
+
+  end
+
+
 
   @@url = "http://realtime.mbta.com/alertsrss/rssfeed4"
 

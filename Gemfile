@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 
 gem 'sinatra', '1.4.2'
 gem 'redis',   '3.0.4'
+
 gem 'twitter', '4.7.0'
 gem 'omniauth-twitter', '0.0.16'
+gem 'bitly',   '0.9.0'
 
 gem 'resque',  '1.24.1'
 gem 'resque-scheduler', '2.0.1'
