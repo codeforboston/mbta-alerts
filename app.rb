@@ -8,6 +8,9 @@ require 'twitter'
 require 'omniauth-twitter'
 require 'bitly'
 
+require 'resque'
+require 'resque-scheduler'
+
 require 'haml'
 require 'json'
 
@@ -17,7 +20,9 @@ require 'rss'
 
 class App < Sinatra::Application
 
+
   Redis.current = Redis.new
+
 
   Twitter.configure do |config|
     config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
@@ -26,7 +31,9 @@ class App < Sinatra::Application
     config.oauth_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
   end
 
+
   class Alert
+
     include Redis::Objects
     attr_reader :id, :message, :link
 
@@ -39,17 +46,16 @@ class App < Sinatra::Application
     end
 
     def save
-      save_string = "'#{self.class.to_s.downcase}:#{id}'"
+      save_string = ["#{self.class.to_s.downcase}s:#{id}"]
       self.instance_variables.each do |var|
         next if var == :@id  # Skip if it's the ID
-        save_string << ", '#{var.to_s.delete "@" }'"
-        save_string << ", \"#{self.instance_variable_get(var)}\""
+        save_string << "#{var.to_s.delete "@" }"
+        save_string << "#{self.instance_variable_get(var)}"
       end
       # Save hash object, untweeted list item atomically
-      redis.multi do
-        redis.hmset save_string
-        redis.sadd untweeted id
-      end
+      p save_string
+      redis.hmset(save_string)
+      redis.sadd 'untweeted', self.id
     end
 
   end

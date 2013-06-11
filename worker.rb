@@ -23,12 +23,13 @@ class AlertTweeter
   include TweetHelpers
 
   # Run through list of untweeted alerts, tweetify, and tweet them
-  untweeted_ids = redis.smembers untweeted
+  untweeted_ids = redis.smembers 'untweeted'
   
   untweeted_ids.each do |id|
     alert_content = redis.hgetall "alerts:#{id}"
     tweetable_alert = tweetify alert_content
-    send_tweet tweetable_alert
+    puts tweetable_alert
+    # send_tweet tweetable_alert
   end
 
 end
