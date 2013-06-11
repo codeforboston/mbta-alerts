@@ -26,10 +26,9 @@ class AlertTweeter
   untweeted_ids = redis.smembers untweeted
   
   untweeted_ids.each do |id|
-    tweetable_content = redis.hgetall "alerts:#{id}"
-    alert_to_tweet = tweetify(tweetable_content)
-    # TODO: Tweet the tweet
-    send_tweet(alert_to_tweet)
+    alert_content = redis.hgetall "alerts:#{id}"
+    tweetable_alert = tweetify alert_content
+    send_tweet tweetable_alert
   end
 
 end

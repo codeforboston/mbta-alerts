@@ -54,7 +54,11 @@ module TweetHelpers
   end
 
   def send_tweet(tweet)
-    # Send tweet to Twitter api
+    begin
+      Twitter.update tweet
+    rescue TwitterError => e
+      redis.lpush "#{e}"
+    end
   end
   
 end
