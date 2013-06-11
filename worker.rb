@@ -8,7 +8,8 @@ class AlertUsher
   @feed = RSS::Parser.parse( open(@url) )
 
   @feed.items.each do |alert|
-    unless Alert.find(alert.guid) # TODO: Write Alert#find
+    # Before adding to redis, does it already exist?
+    unless Alert.hmget alert.guid
       new_alert = Alert.new(id: alert.guid, message: alert.title)
       new_alert.link = alert.link if alert.link
       new_alert.save
@@ -22,13 +23,13 @@ class AlertTweeter
   include TweetHelpers
 
   # Run through list of untweeted alerts, tweetify, and tweet them
-  untweeted_ids = []  # TODO 
-  puts "redis.lrange untweeted 0 -1"
+  untweeted_ids = redis.smembers untweeted
   
   untweeted_ids.each do |id|
     tweetable_content = redis.hgetall "alerts:#{id}"
-    to_tweet = tweetify(tweetable_content)
+    alert_to_tweet = tweetify(tweetable_content)
     # TODO: Tweet the tweet
+    send_tweet(alert_to_tweet)
   end
 
 end

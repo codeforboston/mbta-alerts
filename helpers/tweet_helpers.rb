@@ -17,6 +17,7 @@ module TweetHelpers
     return tweet
   end
 
+
   def hash_transit_line(tweet)
     colors = %w(Red Green Orange Blue Silver)
     my_tweet = tweet.dup
@@ -50,6 +51,10 @@ module TweetHelpers
 
   def decap_tweet(tweet)
     decapped_tweet = tweet.gsub(/[A-Z]{2,}/) {"#{$~.to_s.decapitalize}"}
+  end
+
+  def send_tweet(tweet)
+    # Send tweet to Twitter api
   end
   
 end

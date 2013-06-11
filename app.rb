@@ -2,6 +2,7 @@
 
 require 'sinatra'
 require 'redis'
+require 'redis-objects'
 
 require 'twitter'
 require 'omniauth-twitter'
@@ -16,7 +17,10 @@ require 'rss'
 
 class App < Sinatra::Application
 
-  class Alert  # Figure out how to extend Redis ORM methods
+  Redis.current = Redis.new
+
+  class Alert
+    include Redis::Objects
     attr_reader :id, :message, :link
 
     def initialize(*args)
@@ -34,12 +38,10 @@ class App < Sinatra::Application
         save_string << ", '#{var.to_s.delete "@" }'"
         save_string << ", \"#{self.instance_variable_get(var)}\""
       end
-
       # Save hash object, untweeted list item atomically
-      puts "Still TODO: get this to save to redis"
       redis.multi do
-        puts "redis.hmset #{save_string}"
-        puts "redis.rpush untweeted id"
+        redis.hmset save_string
+        redis.sadd untweeted id
       end
     end
 
