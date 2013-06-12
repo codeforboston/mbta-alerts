@@ -1,5 +1,5 @@
-# Make MBTA alerts tweetable
 module TweetHelpers
+  # Make MBTA alerts tweetable
 
   @bitly = Bitly.new 'mbtaalerts', ENV['BITLY_TOKEN']
 
@@ -12,23 +12,24 @@ module TweetHelpers
     unless alert['link'].nil?
       shortlink = @bitly.shorten(alert['link'].dup).short_url
       tweet << " #{shortlink}" unless tweet.length + shortlink.length > 140
-      puts "final tweet: #{tweet}"
     end
+    tweet = tweet.dup[0..139]
+    puts "FINAL TWEET: #{tweet}"
     return tweet
   end
 
 
   def self.hash_transit_line(tweet)
     colors = %w(Red Green Orange Blue Silver)
-    my_tweet = tweet.dup
+    hashed_tweet = tweet.dup
     colors.each do |color|
-      my_tweet.gsub! /#{color} line/i, "##{color}Line"
+      hashed_tweet.gsub! /#{color} line/i, "##{color}Line"
     end
-    return my_tweet
+    return hashed_tweet
   end
 
-
   def self.shorten_locales(tweet)
+    # and months and days
     locale_designations = { 
                 square:  "Sq",
                 center:  "Ctr",
@@ -36,7 +37,25 @@ module TweetHelpers
                 place:   "Pl",
                 avenue:  "Ave",
                 heights: "Hts",
-                station: "Sta" }
+                station: "Sta",
+                january: "Jan",
+                february:"Feb",
+                march:   "Mar",
+                april:   "Apr",
+                may:     "May",
+                june:    "Jun",
+                july:    "Jul",
+                august:  "Aug",
+                september: "Sep",
+                november:  "Nov",
+                december:  "Dec",
+                monday:    "Mon",
+                tuesday:   "Tue",
+                wednesday: "Wed",
+                thursday:  "Thu",
+                friday:    "Fri",
+                saturday:  "Sat",
+                sunday:    "Sun" }
     
     short_tweet = tweet.dup
     locales = locale_designations
@@ -55,10 +74,20 @@ module TweetHelpers
 
 
   def self.send_tweet(tweet)
+    max_attempts = 3
+    num_attempts = 0
     begin
+      num_attempts += 1
       Twitter.update tweet
-    rescue Twitter::Error => e
-      redis.lpush ['errorlog', "#{e}"]
+    rescue Twitter::Error::TooManyRequests => error
+      if num_attempts <= max_attempts
+        puts "sleeping due to too many attempts"
+        sleep error.rate_limit.reset_in
+        Alert.redis.lpush ['errorlog', "#{error}"]
+        retry
+      else
+        raise
+      end
     end
   end
 

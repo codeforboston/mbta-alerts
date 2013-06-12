@@ -43,10 +43,14 @@ class AlertTweeter
     untweeted_ids.each do |id|
       alert = Alert.redis.hgetall("alerts:#{id}")
       tweetable_alert = TweetHelpers.tweetify alert
-      puts Alert.redis.srem 'untweeted', id
-      puts "removed #{id} from untweeted queue"
-      sleep 10
-      # send_tweet tweetable_alert
+      puts tweetable_alert
+      TweetHelpers.send_tweet tweetable_alert
+
+      if Alert.redis.srem 'untweeted', id
+        puts "removed #{id} from untweeted queue"
+      end
+
+      sleep 5
     end
   end
 
