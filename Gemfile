@@ -16,9 +16,10 @@ gem 'clockwork'
 gem 'haml',    '4.0.3'
 gem 'json',    '1.8.0'
 
+gem 'thin',    '1.5.1'
+gem 'shotgun', '0.9'
+
 group :development do
   gem 'tux',     '0.3.0'
-  gem 'thin',    '1.5.1'
-  gem 'shotgun', '0.9'
   gem 'foreman', '0.63.0'
 end
