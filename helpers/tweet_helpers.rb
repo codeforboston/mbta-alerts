@@ -1,5 +1,4 @@
 # Make MBTA alerts tweetable
-
 module TweetHelpers
 
   @bitly = Bitly.new 'mbtaalerts', ENV['BITLY_TOKEN']
@@ -8,12 +7,13 @@ module TweetHelpers
     tweet = alert['message'].dup
     tweet = hash_transit_line(tweet)
     tweet = shorten_locales(tweet)
-    tweet = decap_tweet(tweet)
-
-    puts alert['link']
-
-    shortlink = @bitly.shorten alert['link'].dup if alert['link']
-    tweet << " #{shortlink}" unless tweet.length + shortlink.length > 140
+    #tweet = decap_tweet(tweet)
+    
+    unless alert['link'].nil?
+      shortlink = @bitly.shorten(alert['link'].dup).short_url
+      tweet << " #{shortlink}" unless tweet.length + shortlink.length > 140
+      puts "final tweet: #{tweet}"
+    end
     return tweet
   end
 
@@ -21,7 +21,6 @@ module TweetHelpers
   def self.hash_transit_line(tweet)
     colors = %w(Red Green Orange Blue Silver)
     my_tweet = tweet.dup
-
     colors.each do |color|
       my_tweet.gsub! /#{color} line/i, "##{color}Line"
     end
@@ -50,7 +49,8 @@ module TweetHelpers
 
 
   def self.decap_tweet(tweet)
-    decapped_tweet = tweet.gsub(/[A-Z]{2,}/) {"#{$~.to_s.decapitalize}"}
+    decapped_tweet = tweet.dup.gsub!(/[A-Z]{2,}/) {"#{$~.to_s.decapitalize}"}
+    return decapped_tweet
   end
 
 

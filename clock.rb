@@ -11,6 +11,6 @@ module Clockwork
   end
 
   every 60.seconds, AlertUsher
-  every 10.seconds, AlertTweeter
+  every 60.seconds, AlertTweeter
 
 end
