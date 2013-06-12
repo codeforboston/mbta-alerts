@@ -1,10 +1,11 @@
 # config.ru
 
 require './app'
+require 'resque/server'
 
-require 'resque_scheduler'
-require 'resque/scheduler'
-require 'resque_scheduler/server'
+run Rack::URLMap.new \
+  "/"       => Sinatra::Application,
+  "/resque" => Resque::Server.new
 
 use Rack::ShowExceptions
 
