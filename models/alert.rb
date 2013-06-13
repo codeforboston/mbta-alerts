@@ -21,8 +21,8 @@ class Alert
     end
     # Save hash object, untweeted list item atomically
     p save_string
-    redis.hmset(save_string)
-    redis.sadd 'untweeted', self.id
+    Redis.current.hmset(save_string)
+    Redis.current.sadd 'untweeted', self.id
   end
 
 end
