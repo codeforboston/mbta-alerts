@@ -15,6 +15,7 @@ require 'haml'
 require 'json'
 
 require 'rss'
+require 'open-uri'
 
 require "bundler/setup"
 Bundler.require(:default)
@@ -24,8 +25,8 @@ require './models/alert'
 
 class App < Sinatra::Application
 
-
-  Redis.current = Redis.new
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 
 
   Twitter.configure do |config|
