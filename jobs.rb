@@ -20,9 +20,12 @@ class AlertUsher
       @guid = alert.guid.content.gsub 'T-Alert ID ', ''
 
       puts "Looking at #{@guid}"
+      p Redis.current
+      p Redis.current.hgetall "alerts:#{@guid}"
       if Redis.current.hgetall("alerts:#{@guid}").empty? and !alert.title.match /(elevator|escalator)/i
         new_alert = Alert.new(id: @guid, message: alert.title)
         new_alert.link = alert.link unless alert.link.nil?
+        p new_alert
         new_alert.save
         puts "Saved alert #{new_alert.id}\n\n"
       end
@@ -43,7 +46,7 @@ class AlertTweeter
     p untweeted_ids
     
     untweeted_ids.each do |id|
-      puts "-------#{id}"
+      puts "-----------#{id}"
       p Redis.current.hgetall "alerts:#{id}"
       alert = Redis.current.hgetall("alerts:#{id}")
       tweetable_alert = TweetHelpers.tweetify alert
