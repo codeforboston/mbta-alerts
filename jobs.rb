@@ -19,7 +19,7 @@ class AlertUsher
       # Before adding to redis, does it already exist?
       @guid = alert.guid.content.gsub 'T-Alert ID ', ''
       puts "Looking at #{@guid}"
-      if Alert.redis.hgetall("alerts:#{@guid}").empty? and !alert.title.match /(elevator|escalator)/i
+      if Redis.current.hgetall("alerts:#{@guid}").empty? and !alert.title.match /(elevator|escalator)/i
         new_alert = Alert.new(id: @guid, message: alert.title)
         new_alert.link = alert.link unless alert.link.nil?
         new_alert.save
@@ -38,16 +38,16 @@ class AlertTweeter
 
   def self.perform
     # Run through list of untweeted alerts, tweetify, and tweet them
-    untweeted_ids = Alert.redis.smembers 'untweeted'
+    untweeted_ids = Redis.current.smembers 'untweeted'
     p untweeted_ids
     
     untweeted_ids.each do |id|
-      alert = Alert.redis.hgetall("alerts:#{id}")
+      alert = Redis.current.hgetall("alerts:#{id}")
       tweetable_alert = TweetHelpers.tweetify alert
       puts tweetable_alert
       TweetHelpers.send_tweet tweetable_alert
 
-      if Alert.redis.srem 'untweeted', id
+      if Redis.current.srem 'untweeted', id
         puts "removed #{id} from untweeted queue"
       end
 

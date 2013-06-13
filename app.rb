@@ -25,17 +25,12 @@ require './models/alert'
 class App < Sinatra::Application
 
 
-  puts "entering configure block"
   configure do
     require 'redis'
     redis_uri = ENV['REDISTOGO_URL']
-    puts redis_uri
     uri = URI.parse(redis_uri)
-    puts uri
     Redis.current = Redis.connect(:host => uri.host, :port => uri.port, :password => uri.password)
-    p Redis.current
   end
-  p Redis.current
 
   Twitter.configure do |config|
     config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
