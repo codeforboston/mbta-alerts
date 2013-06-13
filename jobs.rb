@@ -47,6 +47,7 @@ class AlertTweeter
     
     untweeted_ids.each do |id|
       puts "-----------#{id}"
+      p Redis.current
       p Redis.current.hgetall "alerts:#{id}"
       alert = Redis.current.hgetall("alerts:#{id}")
       tweetable_alert = TweetHelpers.tweetify alert

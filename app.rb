@@ -31,9 +31,10 @@ class App < Sinatra::Application
   end
 
   uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-  Resque.redis = REDIS
-
+  Redis.current = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  Resque.redis = Redis.current
+  p "-----------configuring"
+  p Redis.current
 
   FEED_URL = "http://realtime.mbta.com/alertsrss/rssfeed4"
 
