@@ -9,6 +9,7 @@ Bundler.require(:default)
 class AlertUsher
   # Saves new alerts into Redis in their current form
   @queue = :usher_queue
+  
   FEED_URL = "http://realtime.mbta.com/alertsrss/rssfeed4"
 
   def self.perform  
