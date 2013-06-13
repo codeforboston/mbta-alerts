@@ -83,7 +83,7 @@ module TweetHelpers
       if num_attempts <= max_attempts
         puts "sleeping due to too many attempts"
         sleep error.rate_limit.reset_in
-        Redis.current.lpush ['errorlog', "#{error}"]
+        REDIS.lpush ['errorlog', "#{error}"]
         retry
       else
         raise

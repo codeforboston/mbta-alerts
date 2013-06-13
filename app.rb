@@ -21,16 +21,8 @@ Bundler.require(:default)
 require './jobs'
 require './models/alert'
 
-
 class App < Sinatra::Application
 
-
-  configure do
-    require 'redis'
-    redis_uri = ENV['REDISTOGO_URL']
-    uri = URI.parse(redis_uri)
-    Redis.current = Redis.connect(:host => uri.host, :port => uri.port, :password => uri.password)
-  end
 
   Twitter.configure do |config|
     config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
@@ -38,6 +30,10 @@ class App < Sinatra::Application
     config.oauth_token = ENV['TWITTER_ACCESS_TOKEN']
     config.oauth_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
   end
+
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  Resque.redis = REDIS
 
 
   FEED_URL = "http://realtime.mbta.com/alertsrss/rssfeed4"
