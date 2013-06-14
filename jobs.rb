@@ -52,11 +52,8 @@ class AlertTweeter
       alert = Redis.current.hgetall("alerts:#{id}")
       tweetable_alert = TweetHelpers.tweetify alert
       puts tweetable_alert
-      TweetHelpers.send_tweet tweetable_alert
 
-      if Redis.current.srem 'untweeted', id
-        puts "removed #{id} from untweeted queue"
-      end
+      TweetHelpers.send_tweet tweetable_alert, id
 
       sleep 5
     end

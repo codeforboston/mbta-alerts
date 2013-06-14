@@ -73,12 +73,14 @@ module TweetHelpers
   end
 
 
-  def self.send_tweet(tweet)
+  def self.send_tweet(tweet, id)
     max_attempts = 3
     num_attempts = 0
+
     begin
       num_attempts += 1
       Twitter.update tweet
+
     rescue Twitter::Error::TooManyRequests => error
       if num_attempts <= max_attempts
         puts "sleeping due to too many attempts"
@@ -87,6 +89,14 @@ module TweetHelpers
         retry
       else
         raise
+      end
+      
+    rescue Twitter::Error::StatusIsADuplicate => dup_error
+      p dup_error
+      Redis.current.lpush ['errorlog', "#{dup_error}"]
+    ensure
+      if Redis.current.srem 'untweeted', id
+        puts "removed #{id} from untweeted queue"
       end
     end
   end
