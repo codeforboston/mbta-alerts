@@ -1,0 +1,22 @@
+{
+  "name": "mbta-alerts",
+  "version": "0.0.0",
+  "description": "MBTA Alerts ===========",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/calvinmetcalf/mbta-alerts.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "8418bfa8b546195536c3404881d7face3165ea9b",
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "request": "~2.21.0",
+    "node-twitter-api": "0.0.4"
+  }
+}
