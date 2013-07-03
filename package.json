@@ -17,6 +17,6 @@
   "dependencies": {
     "coffee-script": "~1.6.3",
     "request": "~2.21.0",
-    "node-twitter-api": "0.0.4"
+    "simple-twitter": "~1.0.3"
   }
 }
