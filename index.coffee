@@ -48,16 +48,10 @@ start = ()->
 		true
 	true
 
-timer = undefined
 
-exports.start = start
 
-exports.tweet = tweet
 
-exports.startup = ()->
-	start()
-	timer=setInterval(start,60000)
+start()
+timer=setInterval(start,60000)
 
-exports.stopit = ()->
-	clearInterval timer
 
