@@ -1,0 +1,10 @@
+{
+	"key":"mbta api key",
+	"twitter":
+		{
+			"consumerKey": "from twitter",
+			"consumerSecret": "from twitter",
+			"token":"from twitter",
+			"tokenSecret":"from twitter"
+		}
+}
