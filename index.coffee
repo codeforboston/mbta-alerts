@@ -30,15 +30,16 @@ eachAlert = (v)->
 	request nParams,(e,r,b)->
 		if r.statusCode == 200
 			v._rev=b._rev
-			nParams.method='put'
+			fcb = (e,r,b)->
+				true
 		else
-			console.log 'tweeting ',v.header_text 
-			tweet v.header_text
-			nParams.method='post'
-			nParams.url = "https://#{config.couch.user}:#{config.couch.pw}@#{config.couch.server}/#{config.couch.db}"
+			fcb = (e,r,b)->
+				if r.statusCode == 201
+					console.log 'tweeting ',v.header_text 
+					tweet v.header_text
+		nParams.method='put'
 		nParams.body=v
-		request nParams,(e,r,b)->
-			true
+		request nParams,fcb
 		true
 	true
 start = ()->
