@@ -8,8 +8,8 @@ params =
 	url : 'http://realtime.mbta.com/developer/api/v1/alerts'
 	json:true
 
-dcb = (err,resp)->
-	console.log([err,resp])
+dcb = (err)->
+	console.log(err)
 
 cleanForTweet=(msg)->
 	if msg.length > 132
