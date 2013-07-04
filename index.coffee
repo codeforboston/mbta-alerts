@@ -25,7 +25,7 @@ i = 0
 eachAlert = (v)->
 	v['_id']=v['alert_id'].toString()
 	nParams = 
-		url:"http://calvin.iriscouch.com/mbta/#{v._id}"
+		url:"https://#{config.couch}@calvin.iriscouch.com/mbta/#{v._id}"
 		json:true
 	request nParams,(e,r,b)->
 		if r.statusCode == 200
@@ -35,7 +35,7 @@ eachAlert = (v)->
 			console.log 'tweeting ',v.header_text 
 			tweet v.header_text
 			nParams.method='post'
-			nParams.url = "http://calvin.iriscouch.com/mbta"
+			nParams.url = "https://#{config.couch}@calvin.iriscouch.com/mbta"
 		nParams.body=v
 		request nParams,(e,r,b)->
 			true
