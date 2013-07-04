@@ -9,7 +9,7 @@ params =
 	json:true
 
 dcb = (err)->
-	console.log(err)
+	console.log(err) if err
 
 cleanForTweet=(msg)->
 	if msg.length > 132
@@ -42,7 +42,7 @@ eachAlert = (v)->
 		true
 	true
 start = ()->
-	console.log 'running it time ', ++i
+	console.log 'run number #', ++i
 	request params, (e,r,b)->
 		if b and b.alerts
 			b.alerts.forEach eachAlert
