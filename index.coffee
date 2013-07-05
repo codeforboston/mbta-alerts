@@ -1,6 +1,7 @@
 request = require 'request'
 Twitter = require 'simple-twitter'
 config = require './config'
+crypto = require 'crypto'
 twitter = new Twitter(config.twitter.consumerKey,config.twitter.consumerSecret,config.twitter.token,config.twitter.tokenSecret)
 params = 
 	qs:
@@ -28,21 +29,36 @@ eachAlert = (v)->
 		url:"https://#{config.couch.user}:#{config.couch.pw}@#{config.couch.server}/#{config.couch.db}/#{v._id}"
 		json:true
 	request nParams,(e,r,b)->
-		unless r.statusCode == 200
+		if r.statusCode == 200
+			v._rev = b._rev
+			fcb = dcb
+		else
 			fcb = (e,r,b)->
 				if r.statusCode == 201
 					console.log 'tweeting ',v.header_text 
 					tweet v.header_text
-			nParams.method='put'
-			nParams.body=v
-			request nParams,fcb
+		nParams.method='put'
+		nParams.body=v
+		request nParams,fcb
 		true
 	true
+
+lastHash = 1
+
+dumbCache = (alerts,cb)->
+	hash = crypto.createHash 'sha512'
+	hash.update JSON.stringify(alerts), 'utf8'
+	newHash = hash.digest 'base64'
+	unless lastHash == newHash
+		lastHash=newHash
+		cb alerts
+
 start = ()->
 	console.log 'run number #', ++i
 	request params, (e,r,b)->
 		if b and b.alerts
-			b.alerts.forEach eachAlert
+			dumbCache b.alerts, (alerts)->
+				alerts.forEach eachAlert
 		else
 			console.log e,r,b
 		true
