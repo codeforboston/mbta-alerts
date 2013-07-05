@@ -28,18 +28,14 @@ eachAlert = (v)->
 		url:"https://#{config.couch.user}:#{config.couch.pw}@#{config.couch.server}/#{config.couch.db}/#{v._id}"
 		json:true
 	request nParams,(e,r,b)->
-		if r.statusCode == 200
-			v._rev=b._rev
-			fcb = (e,r,b)->
-				true
-		else
+		unless r.statusCode == 200
 			fcb = (e,r,b)->
 				if r.statusCode == 201
 					console.log 'tweeting ',v.header_text 
 					tweet v.header_text
-		nParams.method='put'
-		nParams.body=v
-		request nParams,fcb
+			nParams.method='put'
+			nParams.body=v
+			request nParams,fcb
 		true
 	true
 start = ()->
