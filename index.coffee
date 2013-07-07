@@ -41,7 +41,7 @@ eachAlert = (v)->
 					tweet v.header_text
 		nParams.method='put'
 		nParams.body=v
-		request nParams,callback
+		request nParams, callback
 		true
 	true
 
