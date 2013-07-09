@@ -18,9 +18,8 @@ cleanForTweet=(msg)->
 	if msg.length > 132
 		msg = msg.slice(0,132)+'...'
 	msg = msg+' #mbta'
-	msg.replace /\b\w+?\b Line/g,(a)->
+	msg.replace /\b\w+?\b [Ll]ine/g,(a)->
 		'#'+a.replace(/\ /,"")
-	msg
 	
 tweet = (msg,cb=defaultCallback)->
 	twitter.post('statuses/update',{status:cleanForTweet(msg)},cb)
@@ -31,7 +30,9 @@ eachAlert = (v)->
 		url:"https://#{config.couch.user}:#{config.couch.pw}@#{config.couch.server}/#{config.couch.db}/#{v._id}"
 		json:true
 	request nParams,(e,r,b)->
-		if r.statusCode == 200
+		if e
+			console.log e
+		else if r.statusCode == 200
 			v._rev = b._rev
 			callback = defaultCallback
 		else
@@ -51,7 +52,9 @@ dumbCache = (alerts,cb)->
 	hash = crypto.createHash 'sha512'
 	hash.update JSON.stringify(alerts), 'utf8'
 	newHash = hash.digest 'base64'
-	unless lastHash == newHash
+	if lastHash == newHash
+		console.log 'no change'
+	else
 		lastHash=newHash
 		cb alerts
 	true

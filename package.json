@@ -1,8 +1,8 @@
 {
   "name": "mbta-alerts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "MBTA Alerts ===========",
-  "main": "index.coffee",
+  "main": "server.js",
   "scripts": {
     "test": "test"
   },
@@ -13,7 +13,6 @@
   "author": "",
   "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "8418bfa8b546195536c3404881d7face3165ea9b",
   "dependencies": {
     "coffee-script": "~1.6.3",
     "request": "~2.21.0",
