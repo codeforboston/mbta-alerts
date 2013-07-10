@@ -25,7 +25,7 @@ tweet = (msg,cb=defaultCallback)->
 	twitter.post('statuses/update',{status:cleanForTweet(msg)},cb)
 
 filterEl = (headerText)->
-	/[elevator|escalator]/.test headerText.toLowerCase()
+	/elevator/.test(headerText.toLowerCase()) or /escalator/.test(headerText.toLowerCase())
 
 eachAlert = (v)->
 	v['_id']=v['alert_id'].toString()
