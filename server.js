@@ -1,4 +1,17 @@
 #!/bin/env node
-var exec = require('child_process').exec;
-exec('forever stop index.coffee');
-exec('forever -c coffee index.coffee');
+
+var cluster = require('cluster');
+
+if (cluster.isMaster) {
+  // Fork workers.
+
+    cluster.fork();
+  
+
+  cluster.on('exit', function(worker, code, signal) {
+    console.log('worker ' + worker.process.pid + ' died');
+    cluster.fork();
+  });
+} else {
+  require('./bot');
+}
