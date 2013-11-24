@@ -1,0 +1,16 @@
+{
+	"key":"mbta api key",
+	"twitter":
+		{
+			"consumerKey": "from twitter",
+			"consumerSecret": "from twitter",
+			"token":"from twitter",
+			"tokenSecret":"from twitter"
+		},
+	couch:{
+		"user":"put this in",
+		"pw":"put this in",
+		"server":"calvin.iriscouch.com",
+		"db":"mbta"
+	}
+}

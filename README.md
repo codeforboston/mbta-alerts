@@ -23,52 +23,16 @@ The old RSS feed used short descriptions which were tweetable, but upgrades to t
 
 MBTA Alerts uses:
 
-+ Ruby 2.0
-+ [Sinatra][sin] as a framework
-+ [Redis][red] as a database
-+ [Resque][res] and [resque-scheduler][sch] as background job coordinators
-
-[sin]: http://www.sinatrarb.com
-[red]: http://redis.io/
-[res]: https://github.com/defunkt/resque
-[sch]: https://github.com/bvandenbos/resque-scheduler
++ nodejs
 
 
 
 ### Getting Set Up for Development
 
-Make sure you have `rvm`, Ruby >= 2.0.0, and `git`. If you don't have `rvm` and you're on a Mac, [install Homebrew](http://mxcl.github.io/homebrew/).
-
-Use a distinct gemset for MBTA Alerts and `bundle install` the gems.
-
-```
-$ rvm gemset create talerts
-$ rvm gemset use talerts
-$ bundle install
+```bash
+npm install
+npm install -g coffee-script forever #may need a sudo
+forever start -c coffee index.coffee
 ```
 
-To determine if you have Redis, run `redis-server -v`.
-
-Install redis if you have not done so previously.
-
-```
-$ wget http://redis.googlecode.com/files/redis-2.6.13.tar.gz
-$ tar xzf redis-2.6.13.tar.gz
-$ cd redis-2.6.13
-$ make
-```
-
-We use [Foreman](https://github.com/ddollar/foreman) to run the webserver and Redis at the same time, using the processes defined in `Procfile`. Run `foreman start` and use `^C` to end.
-
-Then point your browser to [http://localhost:9393][93] and you should see a list of recent MBTA alerts, preceded by four-digit GUIDs.
-
-[93]: http://localhost:9393
-
-If that localhost port doesn't work, look in the terminal for a statement like `server.1 | >> Listening on 127.0.0.1:9393` -- those last 4 digits are the port number to use.
-
-### Notes
-
-Some of the challenges mentioned by FredHQ in his gists solve themselves with the new MBTA feed structure (version 4). For example:
-
-+ There is a GUID tag that we can use in Redis to determine whether a tweet has already been sent.
-
+done
