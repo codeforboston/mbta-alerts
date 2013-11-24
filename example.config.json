@@ -7,10 +7,10 @@
 			"token":"from twitter",
 			"tokenSecret":"from twitter"
 		},
-	couch:{
+	"couch":{
 		"user":"put this in",
 		"pw":"put this in",
-		"server":"calvin.iriscouch.com",
+		"server":"yourName.cloudant.com",
 		"db":"mbta"
 	}
 }
