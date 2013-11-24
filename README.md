@@ -31,8 +31,7 @@ MBTA Alerts uses:
 
 ```bash
 npm install
-npm install -g coffee-script forever #may need a sudo
-forever start -c coffee index.coffee
+./server.js
 ```
 
 done
