@@ -108,6 +108,13 @@ var bots = [
     name: 'providence'
   },
   {
+    config:config.lowell,
+    test:function (service) {
+      return service.route_name === 'Lowell Line';
+    },
+    name: 'lowell'
+  },
+  {
     config:config.mattapan,
     test:function (service) {
       return service.route_name ==='Mattapan High-Speed Line' || service.route_name === 'Mattapan Trolley';
@@ -118,6 +125,13 @@ var bots = [
     config:config.bus8,
     test:function (service) {
       return service.route_name ==='8';
+    },
+    name: 'bus8'
+  },
+  {
+    config:config.bus60,
+    test:function (service) {
+      return service.route_name ==='60';
     },
     name: 'bus8'
   },
@@ -146,10 +160,10 @@ function other(alert, cb) {
   //console.log('tweeting ', msg);
   bots.forEach(function (bot) {
     if (alert.affected_services.services.some(bot.test)) {
-      // bot.bot.post('statuses/update', {
-      //   status: msg
-      // }, cb);
-      console.log('would tweet', msg, bot.name);
+      bot.bot.post('statuses/update', {
+        status: msg
+      }, cb);
+      console.log(bot.name, 'is tweeting', msg);
     }
   });
 }

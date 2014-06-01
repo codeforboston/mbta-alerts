@@ -14,7 +14,7 @@ db.sync(dbremote).then(function () {
 
 
 var i = 0;
-  function interfunc() {
-    console.log('run number #', ++i);
-    bot();
-  }
+function interfunc() {
+  console.log('run number #', ++i);
+  bot();
+}
