@@ -13,5 +13,5 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 } else {
-  require('./bot');
+  require('./interval');
 }
