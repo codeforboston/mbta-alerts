@@ -134,6 +134,20 @@ var bots = [
       return ~['114', '116', '117', '120', '121', 'Blue Line'].indexOf(service.route_name);
     },
     name: 'eastie'
+  },
+  {
+    config:config.melrose,
+    test: function (service) {
+      return ~['106', '131', '132', '136', '137', 'Haverhill Line'].indexOf(service.route_name);
+    },
+    name: 'melrose'
+  },
+  {
+    config:config.salem,
+    test: function (service) {
+      return ~['450', '451', '455', '456', '459','465', '468','Newburyport/Rockport Line'].indexOf(service.route_name);
+    },
+    name: 'salem'
   }
 ].map(function (thing) {
   thing.bot = makeTwitter(thing.config);
