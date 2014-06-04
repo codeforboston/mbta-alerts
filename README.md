@@ -35,7 +35,7 @@ Then for the 2014 national day of civic hacking [Calvin Metcalf][] creatted a wh
 - [Commuter Boat Alerts](https://twitter.com/mbtaboatalerts)
 - [Mattapan High Speed Line](https://twitter.com/highspeedalerts)
 - [Buses 220, 221, 222 alerts](https://twitter.com/220_222)
-- [all buses](https://twitter.com/mbta_bus_alerts)
+- [MBTA Bus Alerts](https://twitter.com/mbta_bus_alerts)
 - [Eastie MBTA Alerts](https://twitter.com/EastieMBTA)
 - [Melrose MBTA Alerts](https://twitter.com/melrosembta)
 - [Salem MBTA Alerts](https://twitter.com/SalemMBTA)
