@@ -148,6 +148,13 @@ var bots = [
       return ~['450', '451', '455', '456', '459','465', '468','Newburyport/Rockport Line'].indexOf(service.route_name);
     },
     name: 'salem'
+  },
+  {
+    config:config.saugus,
+    test: function (service) {
+      return ~['426', '428', '429', '430'].indexOf(service.route_name);
+    },
+    name: 'saugus'
   }
 ].map(function (thing) {
   thing.bot = makeTwitter(thing.config);
