@@ -1,20 +1,6 @@
 var config = require('./config');
 
 var Twitter = require('simple-twitter');
-var main = makeTwitter(config.twitter);
-var red = makeTwitter(config.red);
-var green = makeTwitter(config.green);
-var orange = makeTwitter(config.orange);
-var blue = makeTwitter(config.blue);
-var boat = makeTwitter(config.boat);
-var bus = makeTwitter(config.bus);
-var fitchburg = makeTwitter(config.fitchburg);
-var framingham = makeTwitter(config.framingham);
-var newburyport = makeTwitter(config.newburyport);
-var providence = makeTwitter(config.providence);
-var mattapan = makeTwitter(config.mattapan);
-var bus8 = makeTwitter(config.bus8);
-var bus22x = makeTwitter(config.bus22x);
 var bots = [
   {
     config: config.twitter,
@@ -141,6 +127,13 @@ var bots = [
       return service.route_name ==='220' || service.route_name ==='221' || service.route_name ==='222';
     },
     name: 'bus22x'
+  },
+  {
+    config:config.eastie,
+    test: function (service) {
+      return ~['114', '116', '117', '120', '121', 'Blue Line'].indexOf(service.route_name);
+    },
+    name: 'eastie'
   }
 ].map(function (thing) {
   thing.bot = makeTwitter(thing.config);
