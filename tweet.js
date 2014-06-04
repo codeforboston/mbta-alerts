@@ -131,7 +131,7 @@ var bots = [
   {
     config:config.eastie,
     test: function (service) {
-      return ~['114', '116', '117', '120', '121', 'Blue Line'].indexOf(service.route_name);
+      return ~['114', '116', '117', '119', '120', '121', 'Blue Line'].indexOf(service.route_name);
     },
     name: 'eastie'
   },
