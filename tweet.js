@@ -155,6 +155,36 @@ var bots = [
       return ~['426', '428', '429', '430'].indexOf(service.route_name);
     },
     name: 'saugus'
+  },
+  {
+    config:config.quincy,
+    test: function (service) {
+      return service.mode_name ==='Boat' || ~[
+        'Red Line',
+        '201',
+        '202',
+        '210',
+        '211',
+        '212',
+        '214',
+        '215',
+        '216',
+        '217',
+        '220',
+        '221',
+        '222',
+        '225',
+        '230',
+        '236',
+        '238',
+        '240',
+        '245',
+        'Middleborough/Lakeville Line',
+        'Kingston/Plymouth Line',
+        'Greenbush Line'
+      ].indexOf(service.route_name);
+    },
+    name: 'quincy'
   }
 ].map(function (thing) {
   thing.bot = makeTwitter(thing.config);
