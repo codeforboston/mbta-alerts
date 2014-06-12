@@ -40,6 +40,7 @@ Then for the 2014 national day of civic hacking [Calvin Metcalf][] creatted a wh
 - [Melrose MBTA Alerts](https://twitter.com/melrosembta)
 - [Salem MBTA Alerts](https://twitter.com/SalemMBTA)
 - [Saugus MBTA Alerts](https://twitter.com/SaugusMBTA)
+- [Quincy MBTA Aalerts](https:.//twitter.com/quincy_mbta)
 
 [Calvin Metcalf]: https://github.com/calvinmetcalf
 
