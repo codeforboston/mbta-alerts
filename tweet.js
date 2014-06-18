@@ -185,6 +185,13 @@ var bots = [
       ].indexOf(service.route_name);
     },
     name: 'quincy'
+  },
+  {
+    config:config.southie,
+    test: function (service) {
+      return ~['Red Line', '5', '7', '9', '10', '11'].indexOf(service.route_name);
+    },
+    name: 'southie'
   }
 ].map(function (thing) {
   thing.bot = makeTwitter(thing.config);
