@@ -9,7 +9,7 @@ var params = {
   qs: {
     api_key: config.key
   },
-  url: 'http://realtime.mbta.com/developer/api/v1/alerts',
+  url: 'http://realtime.mbta.com/developer/api/v2/alerts',
   json: true
 };
 
