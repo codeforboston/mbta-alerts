@@ -62,7 +62,7 @@ function makeHash(obj) {
 function dumbCache(alerts) {
   var newHash = makeHash(alerts);
   if (lastHash === newHash) {
-    console.log('no change');
+    //console.log('no change');
     return false;
   } else {
     lastHash = newHash;

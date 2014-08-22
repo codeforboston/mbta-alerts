@@ -1,5 +1,5 @@
 var config = require('./config');
-
+var colors = require('colors');
 var Twitter = require('simple-twitter');
 var bots = [
   {
@@ -203,7 +203,7 @@ function makeTwitter(config) {
 module.exports = tweet;
 function tweet(alert) {
   var msg = alert.header_text;
-  console.log(alert.affected_services);
+  //console.log(alert.affected_services);
   other(alert, defaultCallback);
 }
 function other(alert, cb) {
@@ -214,7 +214,7 @@ function other(alert, cb) {
       bot.bot.post('statuses/update', {
         status: msg
       }, cb);
-      console.log(bot.name, 'is tweeting', msg);
+      console.log(bot.name.cyan, 'is tweeting', msg.red);
     }
   });
 }
