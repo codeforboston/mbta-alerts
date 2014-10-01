@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var tweet = require('./tweet');
 var stringify = require('json-stable-stringify');
 var PouchDB = require('pouchdb');
+var Promise = require('bluebird');
 var db = new PouchDB('./local');
 var params = {
   qs: {
@@ -48,8 +49,6 @@ function eachAlert(alert) {
     if (newAlert) {
       tweet(alert);
     }
-  }).catch(function (e) {
-    console.log(e);
   });
 }
 
@@ -76,10 +75,23 @@ function start() {
       lastHash = false;
       console.log(e.stack);
       console.log(e);
+      process.exit(1);
     } else if (b && b.alerts) {
       if (dumbCache(b.alerts)) {
-        return b.alerts.map(eachAlert);
+        return Promise.all(b.alerts.map(eachAlert)).then(function () {
+           process.send({
+            ok: true
+          });
+        }).catch(function (e) {
+          console.log(e.stack);
+          console.log(e);
+          process.exit(1);
+        });
       }
+      process.send({
+        ok: true
+      });
+      return;
     }
   });
 }
