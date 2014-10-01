@@ -220,7 +220,8 @@ function other(alert, cb) {
 }
 function defaultCallback(err) {
   if (err) {
-    return console.log(err);
+    console.log(err);
+    process.exit(3);
   }
 }
 

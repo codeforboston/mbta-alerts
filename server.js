@@ -1,11 +1,12 @@
-#!/bin/env node
-
 'use strict';
 var cp = require('child_process');
 var child;
 var defaultTimeout = 50;
 var timeout = 0;
-function spawnChild(time) {
+function spawnChild(e) {
+  if (e) {
+    console.log(e);
+  }
   console.log(new Date());
   console.log('spawning');
   if (timeout === 0) {

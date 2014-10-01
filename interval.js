@@ -15,7 +15,10 @@ sync.on('complete', function () {
   setInterval(interfunc, interval({seconds: 10}));
   interfunc();
 });
-
+sync.on('error', function (e) {
+  console.log(e);
+  process.exit(5);
+});
 
 
 var i = 0;
@@ -23,3 +26,6 @@ function interfunc() {
   //console.log('run number #', ++i);
   bot();
 }
+process.on('exit', function (e) {
+  console.log('exiting', e);
+});
