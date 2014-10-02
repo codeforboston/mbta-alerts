@@ -38,9 +38,16 @@ function eachAlert(alert) {
     if(stringify(alert) !== stringify(doc)) {
       return alert;
     }
-  }, function () {
-    newAlert = true;
-    return alert;
+  }, function (e) {
+    if (e.message === 'deleted') {
+      return db.allDocs({keys:[alert._id]}).then(function (a){
+        alert._rev = a.rows[0].value.rev;
+        return alert;
+      });
+    } else {
+      newAlert = true;
+      return alert;
+    }
   }).then(function (alert) {
     if (alert) {
       return db.put(alert);
