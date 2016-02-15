@@ -19,7 +19,7 @@ var bots = [
   {
     config:config.green,
     test:function (service) {
-      return service.route_name ==='Green Line';
+      return service.route_name.length > 10 && service.route_name.slice(0, 10) ==='Green Line';
     },
     name: 'green'
   },
