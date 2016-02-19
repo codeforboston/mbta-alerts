@@ -104,7 +104,6 @@ function start() {
     } else if (b && b.alerts) {
       if (dumbCache(b.alerts)) {
         return Promise.all(b.alerts.map(eachAlert)).then(function () {
-          console.log('done');
            process.send({
             ok: true
           });
@@ -114,7 +113,6 @@ function start() {
           process.exit(1);
         });
       }
-      console.log('done 2');
       process.send({
         ok: true
       });
