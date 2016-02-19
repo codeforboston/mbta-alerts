@@ -1,7 +1,13 @@
 var config = require('./config');
 var colors = require('colors');
 var Twitter = require('simple-twitter');
-var bots = [
+var bots = (config.dev ? [{
+  config: config.twitter,
+  test: function () {
+    return true;
+  },
+  name: 'main'
+}] : [
   {
     config: config.twitter,
     test: function () {
@@ -193,7 +199,7 @@ var bots = [
     },
     name: 'southie'
   }
-].map(function (thing) {
+]).map(function (thing) {
   thing.bot = makeTwitter(thing.config);
   return thing;
 });
@@ -201,37 +207,36 @@ function makeTwitter(config) {
   return new Twitter(config.consumerKey, config.consumerSecret, config.token, config.tokenSecret);
 }
 module.exports = tweet;
+
 function tweet(alert) {
-  var msg = alert.header_text;
-  //console.log(alert.affected_services);
-  other(alert, defaultCallback);
-}
-function other(alert, cb) {
-  var msg = cleanForTweet(alert.header_text);
+  var msg = alert.tweeted_msg;
   //console.log('tweeting ', msg);
   bots.forEach(function (bot) {
     if (alert.affected_services.services.some(bot.test)) {
+      console.log(bot.name.cyan, 'is about to tweet', msg.red);
       bot.bot.post('statuses/update', {
         status: msg
-      }, cb);
+      }, function (err) {
+        if (err) {
+          console.log(err);
+          console.log(bot.name.cyan, 'errored with', msg.red);
+          var errData = err.data;
+          try {
+            var parsedErrorData = JSON.parse(errData);
+            if (parsedErrorData.errors.length) {
+              var code = parsedErrorData.errors[0].code;
+              if (code === 186 || code === 187) {
+                return;
+              }
+            }
+          } catch (e) {
+            console.log(e);
+          }
+          process.exit(3);
+          //process.exit(3);
+        }
+      });
       console.log(bot.name.cyan, 'is tweeting', msg.red);
     }
   });
-}
-function defaultCallback(err) {
-  if (err) {
-    console.log(err);
-    process.exit(3);
-  }
-}
-
-function cleanForTweet(msg) {
-  if (msg.length > 131) {
-    msg = msg.slice(0, 131) + '...';
-  }
-  msg = msg + ' #mbta';
-  msg= msg.replace(/\b\w+?\b [Ll]ine/g, function(a) {
-    return '#' + a.replace(/\ /, "");
-  });
-  return  msg;
 }

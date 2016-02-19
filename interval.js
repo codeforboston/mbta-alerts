@@ -23,7 +23,7 @@ sync.on('error', function (e) {
 
 var i = 0;
 function interfunc() {
-  //console.log('run number #', ++i);
+  console.log('run number #', ++i);
   bot();
 }
 process.on('exit', function (e) {

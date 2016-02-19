@@ -25,13 +25,31 @@ function defaultCallback(err) {
 function filterEl(headerText) {
   return /elevator/.test(headerText.toLowerCase()) || /escalator/.test(headerText.toLowerCase());
 }
-
+function cleanForTweet(msg) {
+  msg = msg.replace(/\b\w+?\b [Ll]ine/g, function(a) {
+    return '#' + a.replace(/\ /g, '');
+  });
+  var maxSize = 131;
+  if (msg.search('mbta.com') > -1) {
+    maxSize -= 23;
+  }
+  if (msg.length > maxSize) {
+    if (msg.length - 9 > maxSize) {
+      msg = msg.slice(0, maxSize) + '...';
+    }
+  }
+  if (msg.length + 5 < maxSize) {
+    msg = msg + ' #mbta';
+  }
+  return  msg;
+}
 function eachAlert(alert) {
   var nParams;
   if (filterEl(alert.header_text)) {
     return;
   }
-  alert._id = alert.alert_id.toString();
+  alert.tweeted_msg = cleanForTweet(alert.short_header_text || alert.header_text)
+  alert._id = crypto.createHash('sha224').update(alert.alert_id.toString()).update(alert.tweeted_msg).digest('hex');
   var newAlert = false;
   return db.get(alert._id).then(function (doc) {
     alert._rev = doc._rev;
@@ -86,6 +104,7 @@ function start() {
     } else if (b && b.alerts) {
       if (dumbCache(b.alerts)) {
         return Promise.all(b.alerts.map(eachAlert)).then(function () {
+          console.log('done');
            process.send({
             ok: true
           });
@@ -95,6 +114,7 @@ function start() {
           process.exit(1);
         });
       }
+      console.log('done 2');
       process.send({
         ok: true
       });
