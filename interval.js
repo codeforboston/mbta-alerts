@@ -7,7 +7,7 @@ var dbremote = new PouchDB("https://" + config.couch.user + ":" + config.couch.p
 var db = new PouchDB('./local');
 var sync = db.sync(dbremote);
 sync.on('change', function (ch) {
-  console.log(JSON.stringify(ch, false, 4));
+  console.log('syncing');
 });
 sync.on('complete', function () {
   db.replicate.to(dbremote, {live: true});
