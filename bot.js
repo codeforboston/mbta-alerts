@@ -43,18 +43,14 @@ function cleanForTweet(msg) {
   }
   return  msg;
 }
-var dateString;
-function updateDateString() {
-  var d = new Date();
-  dateString = '' + d.getDate() + d.getMonth() + d.getFullYear();
-}
+
 function eachAlert(alert) {
   var nParams;
   if (filterEl(alert.header_text)) {
     return;
   }
   alert.tweeted_msg = cleanForTweet(alert.short_header_text || alert.header_text)
-  alert._id = crypto.createHmac('sha256', dateString).update(alert.tweeted_msg).digest('hex');
+  alert._id = crypto.createHmac('sha256', alert.alert_id.toString()).update(alert.tweeted_msg).digest('hex');
   var newAlert = false;
   return db.get(alert._id).then(function (doc) {
     alert._rev = doc._rev;
@@ -124,7 +120,6 @@ function start() {
       return;
     }
   });
-  updateDateString();
 }
 
 module.exports = start;
