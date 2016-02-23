@@ -43,13 +43,18 @@ function cleanForTweet(msg) {
   }
   return  msg;
 }
+var dateString;
+function updateDateString() {
+  var d = new Date();
+  dateString = '' + d.getDate() + d.getMonth() + d.getFullYear();
+}
 function eachAlert(alert) {
   var nParams;
   if (filterEl(alert.header_text)) {
     return;
   }
   alert.tweeted_msg = cleanForTweet(alert.short_header_text || alert.header_text)
-  alert._id = crypto.createHash('sha224').update(alert.alert_id.toString()).update(alert.tweeted_msg).digest('hex');
+  alert._id = crypto.createHmac('sha256', dateString).update(alert.tweeted_msg).digest('hex');
   var newAlert = false;
   return db.get(alert._id).then(function (doc) {
     alert._rev = doc._rev;
@@ -96,7 +101,7 @@ function dumbCache(alerts) {
 
 function start() {
   request(params, function(e, r, b) {
-     if(e) {
+    if(e) {
       lastHash = false;
       console.log(e.stack);
       console.log(e);
@@ -104,7 +109,7 @@ function start() {
     } else if (b && b.alerts) {
       if (dumbCache(b.alerts)) {
         return Promise.all(b.alerts.map(eachAlert)).then(function () {
-           process.send({
+          process.send({
             ok: true
           });
         }).catch(function (e) {
@@ -119,6 +124,7 @@ function start() {
       return;
     }
   });
+  updateDateString();
 }
 
 module.exports = start;
