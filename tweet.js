@@ -213,7 +213,6 @@ function tweet(alert) {
   //console.log('tweeting ', msg);
   bots.forEach(function (bot) {
     if (alert.affected_services.services.some(bot.test)) {
-      console.log(bot.name.cyan, 'is about to tweet', msg.red);
       bot.bot.post('statuses/update', {
         status: msg
       }, function (err) {
