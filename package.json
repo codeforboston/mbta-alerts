@@ -11,7 +11,7 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "dependencies": {
-    "request": "~2.21.0",
+    "request": "~2.74.0",
     "simple-twitter": "~1.0.3",
     "interval": "0.0.8",
     "json-stable-stringify": "^1.0.0",
