@@ -60,7 +60,7 @@ var bots = (config.dev ? [{
   {
     config:config.fitchburg,
     test:function (service) {
-      return service.route_name ==='Fitchburg/South Acton Line';
+      return service.route_name ==='Fitchburg Line';
     },
     name: 'fitchburg'
   },
