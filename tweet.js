@@ -60,7 +60,7 @@ var bots = (config.dev ? [{
   {
     config:config.fitchburg,
     test:function (service) {
-      return service.route_name ==='Fitchburg Line';
+      return service.route_name ==='Fitchburg Line' || service.route_name ==='Fitchburg/South Acton Line';
     },
     name: 'fitchburg'
   },
@@ -198,6 +198,13 @@ var bots = (config.dev ? [{
       return ~['Red Line', '5', '7', '9', '10', '11'].indexOf(service.route_name);
     },
     name: 'southie'
+  },
+  {
+    config:config.greenbush,
+    test: function(service) {
+      return service.route_name ==='Greenbush Line';
+    },
+    name: 'greenbush'
   }
 ]).map(function (thing) {
   thing.bot = makeTwitter(thing.config);
