@@ -1,5 +1,5 @@
 var config = require('./config');
-var colors = require('colors');
+require('colors');
 var Twitter = require('simple-twitter');
 var bots = [
   {
@@ -19,7 +19,7 @@ var bots = [
   {
     config:config.green,
     test:function (service) {
-      return service.route.length > 5 && service.route.slice(0, 5) ==='Green';
+      return service.route && service.route.length > 5 && service.route.slice(0, 5) ==='Green';
     },
     name: 'green'
   },
