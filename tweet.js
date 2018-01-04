@@ -6,7 +6,7 @@ var bots = (config.dev ? [{
   test: function () {
     return true;
   },
-  name: 'main'
+  name: 'dev'
 }] : [
   {
     config: config.twitter,
@@ -18,155 +18,155 @@ var bots = (config.dev ? [{
   {
     config:config.red,
     test:function (service) {
-      return service.route_name ==='Red Line';
+      return service.route ==='Red';
     },
     name: 'red'
   },
   {
     config:config.green,
     test:function (service) {
-      return service.route_name.length > 10 && service.route_name.slice(0, 10) ==='Green Line';
+      return service.route.length > 5 && service.route.slice(0, 5) ==='Green';
     },
     name: 'green'
   },
   {
     config:config.orange,
     test:function (service) {
-      return service.route_name ==='Orange Line';
+      return service.route ==='Orange';
     },
     name: 'orange'
   },
   {
     config:config.blue,
     test:function (service) {
-      return service.route_name ==='Blue Line';
+      return service.route ==='Blue';
     },
     name: 'blue'
   },
   {
     config:config.boat,
     test:function (service) {
-      return service.mode_name ==='Boat';
+      return service.route_type === 4;
     },
     name: 'boat'
   },
   {
     config:config.bus,
     test:function (service) {
-      return service.mode_name ==='Bus';
+      return service.route_type === 3;
     },
     name: 'bus'
   },
   {
     config:config.fitchburg,
     test:function (service) {
-      return service.route_name ==='Fitchburg Line' || service.route_name ==='Fitchburg/South Acton Line';
+      return service.route ==='CR-Fitchburg';
     },
     name: 'fitchburg'
   },
   {
     config:config.framingham,
     test:function (service) {
-      return service.route_name ==='Framingham/Worcester Line';
+      return service.route ==='CR-Worcester';
     },
     name: 'framingham'
   },
   {
     config:config.newburyport,
     test:function (service) {
-      return service.route_name ==='Newburyport/Rockport Line';
+      return service.route ==='CR-Newburyport';
     },
     name: 'newburyport'
   },
   {
     config:config.haverhill,
     test:function (service) {
-      return service.route_name ==='Haverhill Line';
+      return service.route ==='CR-Haverhill';
     },
     name: 'haverhill'
   },
   {
     config:config.franklin,
     test:function (service) {
-      return service.route_name ==='Franklin Line';
+      return service.route ==='CR-Franklin';
     },
     name: 'franklin'
   },
   {
     config:config.providence,
     test:function (service) {
-      return service.route_name ==='Providence/Stoughton Line';
+      return service.route ==='CR-Providence';
     },
     name: 'providence'
   },
   {
     config:config.lowell,
     test:function (service) {
-      return service.route_name === 'Lowell Line';
+      return service.route === 'CR-Lowell';
     },
     name: 'lowell'
   },
   {
     config:config.mattapan,
     test:function (service) {
-      return service.route_name ==='Mattapan High-Speed Line' || service.route_name === 'Mattapan Trolley';
+      return service.route ==='Mattapan';
     },
     name: 'mattapan'
   },
   {
     config:config.bus8,
     test:function (service) {
-      return service.route_name ==='8';
+      return service.route ==='8';
     },
     name: 'bus8'
   },
   {
     config:config.bus60,
     test:function (service) {
-      return service.route_name ==='60';
+      return service.route ==='60';
     },
     name: 'bus8'
   },
   {
     config:config.bus22x,
     test:function (service) {
-      return service.route_name ==='220' || service.route_name ==='221' || service.route_name ==='222';
+      return service.route ==='220' || service.route ==='221' || service.route ==='222';
     },
     name: 'bus22x'
   },
   {
     config:config.eastie,
     test: function (service) {
-      return ~['114', '116', '117', '119', '120', '121', 'Blue Line'].indexOf(service.route_name);
+      return ~['114', '116', '117', '119', '120', '121', 'Blue'].indexOf(service.route);
     },
     name: 'eastie'
   },
   {
     config:config.melrose,
     test: function (service) {
-      return ~['106', '131', '132', '136', '137', 'Haverhill Line'].indexOf(service.route_name);
+      return ~['106', '131', '132', '136', '137', 'CR-Haverhill'].indexOf(service.route);
     },
     name: 'melrose'
   },
   {
     config:config.salem,
     test: function (service) {
-      return ~['450', '451', '455', '456', '459','465', '468','Newburyport/Rockport Line'].indexOf(service.route_name);
+      return ~['450', '451', '455', '456', '459','465', '468', 'CR-Newburyport'].indexOf(service.route);
     },
     name: 'salem'
   },
   {
     config:config.saugus,
     test: function (service) {
-      return ~['426', '428', '429', '430'].indexOf(service.route_name);
+      return ~['426', '428', '429', '430'].indexOf(service.route);
     },
     name: 'saugus'
   },
   {
     config:config.quincy,
     test: function (service) {
-      return service.mode_name ==='Boat' || ~[
-        'Red Line',
+      return  service.route_type === 4 || ~[
+        'Red',
         '201',
         '202',
         '210',
@@ -185,24 +185,24 @@ var bots = (config.dev ? [{
         '238',
         '240',
         '245',
-        'Middleborough/Lakeville Line',
-        'Kingston/Plymouth Line',
-        'Greenbush Line'
-      ].indexOf(service.route_name);
+        'CR-Middleborough',
+        'CR-Kingston',
+        'CR-Greenbush'
+      ].indexOf(service.route);
     },
     name: 'quincy'
   },
   {
     config:config.southie,
     test: function (service) {
-      return ~['Red Line', '5', '7', '9', '10', '11'].indexOf(service.route_name);
+      return ~['Red', '5', '7', '9', '10', '11'].indexOf(service.route);
     },
     name: 'southie'
   },
   {
     config:config.greenbush,
     test: function(service) {
-      return service.route_name ==='Greenbush Line';
+      return service.route ==='CR-Greenbush';
     },
     name: 'greenbush'
   }
@@ -219,7 +219,7 @@ function tweet(alert) {
   var msg = alert.tweeted_msg;
   //console.log('tweeting ', msg);
   bots.forEach(function (bot) {
-    if (alert.affected_services.services.some(bot.test)) {
+    if (alert.informed_entity.some(bot.test)) {
       bot.bot.post('statuses/update', {
         status: msg
       }, function (err) {

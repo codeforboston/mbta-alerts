@@ -6,14 +6,24 @@ var stringify = require('json-stable-stringify');
 var PouchDB = require('pouchdb');
 var Promise = require('bluebird');
 var db = new PouchDB('./local');
+var newUrl = 'https://api-v3.mbta.com/alerts';
+// var params = {
+//   qs: {
+//     api_key: config.key
+//   },
+//   url: 'http://realtime.mbta.com/developer/api/v2/alerts',
+//   json: true
+// };
 var params = {
-  qs: {
-    api_key: config.key
-  },
-  url: 'http://realtime.mbta.com/developer/api/v2/alerts',
+
+  url: newUrl,
   json: true
 };
-
+if (config.newkey) {
+  params.qs = {
+    api_key:config.newkey
+  }
+}
 function defaultCallback(err) {
   if (err) {
     return console.log(err);
@@ -29,7 +39,7 @@ function cleanForTweet(msg) {
   msg = msg.replace(/\b\w+?\b [Ll]ine/g, function(a) {
     return '#' + a.replace(/\ /g, '');
   });
-  var maxSize = 131;
+  var maxSize = 271;
   if (msg.search('mbta.com') > -1) {
     maxSize -= 23;
   }
@@ -44,13 +54,14 @@ function cleanForTweet(msg) {
   return  msg;
 }
 
-function eachAlert(alert) {
-  var nParams;
-  if (filterEl(alert.header_text)) {
+function eachAlert(_alert) {
+  var alert = _alert.attributes;
+  alert.alert_id = _alert.id;
+  if (filterEl(alert.header)) {
     return;
   }
-  alert.tweeted_msg = cleanForTweet(alert.short_header_text || alert.header_text)
-  alert._id = crypto.createHmac('sha256', alert.alert_id.toString()).update(alert.tweeted_msg).digest('hex');
+  alert.tweeted_msg = cleanForTweet(alert.short_header || alert.header)
+  alert._id = crypto.createHmac('sha256', alert.alert_id).update(alert.tweeted_msg).digest('hex');
   var newAlert = false;
   return db.get(alert._id).then(function (doc) {
     alert._rev = doc._rev;
@@ -102,9 +113,9 @@ function start() {
       console.log(e.stack);
       console.log(e);
       process.exit(1);
-    } else if (b && b.alerts) {
-      if (dumbCache(b.alerts)) {
-        return Promise.all(b.alerts.map(eachAlert)).then(function () {
+    } else if (b && b.data) {
+      if (dumbCache(b.data)) {
+        return Promise.all(b.data.map(eachAlert)).then(function () {
           process.send({
             ok: true
           });
