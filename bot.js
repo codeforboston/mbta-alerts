@@ -7,6 +7,8 @@ var PouchDB = require('pouchdb');
 var Promise = require('bluebird');
 var db = new PouchDB('./local');
 var newUrl = 'https://api-v3.mbta.com/alerts';
+
+
 // var params = {
 //   qs: {
 //     api_key: config.key
@@ -15,7 +17,7 @@ var newUrl = 'https://api-v3.mbta.com/alerts';
 //   json: true
 // };
 var params = {
-
+  headers: {},
   url: newUrl,
   json: true
 };
@@ -24,17 +26,17 @@ if (config.newkey) {
     api_key:config.newkey
   }
 }
-function defaultCallback(err) {
-  if (err) {
-    return console.log(err);
-  }
-}
+// function defaultCallback(err) {
+//   if (err) {
+//     return console.log(err);
+//   }
+// }
 
 
 
-function filterEl(headerText) {
-  return /elevator/.test(headerText.toLowerCase()) || /escalator/.test(headerText.toLowerCase());
-}
+// function filterEl(headerText) {
+//   return /elevator/.test(headerText.toLowerCase()) || /escalator/.test(headerText.toLowerCase());
+// }
 function cleanForTweet(msg) {
   msg = msg.replace(/\b\w+?\b [Ll]ine/g, function(a) {
     return '#' + a.replace(/\ /g, '');
@@ -57,7 +59,7 @@ function cleanForTweet(msg) {
 function eachAlert(_alert) {
   var alert = _alert.attributes;
   alert.alert_id = _alert.id;
-  if (filterEl(alert.header)) {
+  if (alert.effect === 'ACCESS_ISSUE' || alert.effect === 'STATION_ISSUE') {
     return;
   }
   alert.tweeted_msg = cleanForTweet(alert.short_header || alert.header)
@@ -98,7 +100,7 @@ function makeHash(obj) {
 function dumbCache(alerts) {
   var newHash = makeHash(alerts);
   if (lastHash === newHash) {
-    //console.log('no change');
+    // console.log('no change');
     return false;
   } else {
     lastHash = newHash;
@@ -107,13 +109,31 @@ function dumbCache(alerts) {
 }
 
 function start() {
+  // console.log(params);
   request(params, function(e, r, b) {
-    if(e) {
+    if (e) {
       lastHash = false;
       console.log(e.stack);
       console.log(e);
       process.exit(1);
+    } else if (r.statusCode === 304) {
+      process.send({
+        ok: true
+      });
+      return;
     } else if (b && b.data) {
+      if (r.headers.etag) {
+        params.headers['If-None-Match'] = r.headers.etag;
+      } else {
+        delete params.headers['If-None-Match'];
+      }
+      if (r.headers['last-modified']) {
+        params.headers['If-Modified-Since'] = r.headers['last-modified'];
+      } else if (r.headers.date) {
+        params.headers['If-Modified-Since'] = r.headers.date;
+      } else {
+        delete params.headers['If-Modified-Since'];
+      }
       if (dumbCache(b.data)) {
         return Promise.all(b.data.map(eachAlert)).then(function () {
           process.send({
