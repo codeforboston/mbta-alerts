@@ -119,7 +119,7 @@ var bots = [
     test:function (service) {
       return service.route ==='60';
     },
-    name: 'bus8'
+    name: 'bus60'
   },
   {
     config:config.bus22x,
