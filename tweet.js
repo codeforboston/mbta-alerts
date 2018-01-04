@@ -1,13 +1,7 @@
 var config = require('./config');
 var colors = require('colors');
 var Twitter = require('simple-twitter');
-var bots = (config.dev ? [{
-  config: config.twitter,
-  test: function () {
-    return true;
-  },
-  name: 'dev'
-}] : [
+var bots = [
   {
     config: config.twitter,
     test: function () {
@@ -206,8 +200,14 @@ var bots = (config.dev ? [{
     },
     name: 'greenbush'
   }
-]).map(function (thing) {
-  thing.bot = makeTwitter(thing.config);
+].map(function (thing) {
+  if (config.dev && thing.name !== 'main') {
+    thing.bot = {post: function (a, b, cb) {
+      process.nextTick(cb)
+    }}
+  } else {
+    thing.bot = makeTwitter(thing.config);
+  }
   return thing;
 });
 function makeTwitter(config) {
@@ -242,7 +242,8 @@ function tweet(alert) {
           //process.exit(3);
         }
       });
-      console.log(bot.name.cyan, 'is tweeting', msg.red);
+      var verb = (config.dev && bot.name !== 'main') ? 'would be' : 'is'
+      console.log(bot.name.cyan, verb, 'tweeting', msg.red);
     }
   });
 }
